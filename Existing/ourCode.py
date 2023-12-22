@@ -35,17 +35,17 @@ miRNA_functional_similarity = numpy.zeros((495, 495))
 microRNA_integrated_similarity = numpy.zeros((495, 495))
 kernel_microRNA_similarity = numpy.zeros((495, 495))
 
-xlsx1 = xlrd.open_workbook('data/Disease_semantic_similarity_matrix_model_1.xlsx')
-xlsx2 = xlrd.open_workbook('data/Disease_semantic_similarity_matrix_model_2.xlsx')  # 打开Excel文件读取数据
-sheet1 = xlsx1.sheets()[0]
-sheet2 = xlsx2.sheets()[0]
-for i in range(383):
-    for j in range(383):
-        s1 = sheet1.row_values(i)
-        s2 = sheet2.row_values(i)
-        m = s1[j]
-        n = s2[j]
-        disease_semantic_similarity[i, j] = float(m + n) / 2  # Get disease semantic similarity matrix SD
+# xlsx1 = xlrd.open_workbook('data/Disease_semantic_similarity_matrix_model_1.xlsx')
+# xlsx2 = xlrd.open_workbook('data/Disease_semantic_similarity_matrix_model_2.xlsx')  # 打开Excel文件读取数据
+# sheet1 = xlsx1.sheets()[0]
+# sheet2 = xlsx2.sheets()[0]
+# for i in range(383):
+#     for j in range(383):
+#         s1 = sheet1.row_values(i)
+#         s2 = sheet2.row_values(i)
+#         m = s1[j]
+#         n = s2[j]
+#         disease_semantic_similarity[i, j] = float(m + n) / 2  # Get disease semantic similarity matrix SD
 
 
 xlsx3 = xlrd.open_workbook('data/Known_disease_miRNA_association_number.xlsx')
@@ -320,7 +320,7 @@ for m2 in range(383):
     for n2 in range(495):
         for z2 in range(23):
             if (m2, n2) in mtype1[z2]:
-                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataSet
+                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataset
 for m3 in range(383):
     for n3 in range(495):
         if adjacency_matrix[m3, n3] == 1:  # dataset存的是（疾病号，mirna号）

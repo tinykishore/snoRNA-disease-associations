@@ -1,3 +1,4 @@
+import csv
 import random
 import time
 
@@ -16,36 +17,30 @@ from sklearn.model_selection import train_test_split, LeaveOneOut
 
 from Existing.ourCode import startTime
 
-SnoRNA_similarity = pd.read_csv('newData/SnoS.csv')
-disease_name = pd.read_csv('newData/disease_name.csv')
-snoRNA_name = pd.read_csv('newData/snoRNA_name.csv')
-known_association = pd.read_csv('newData/SnoD.csv')
-disease_similarity = pd.read_csv('newData/DS.csv')
-
-
-
+SnoRNA_similarity = pd.read_csv('data2/SnoS.csv')
+disease_name = pd.read_csv('data2/disease_name.csv')
+snoRNA_name = pd.read_csv('data2/snoRNA_name.csv')
+known_association = pd.read_csv('data2/SnoD.csv')
+disease_similarity = pd.read_csv('data2/DS.csv')
 
 disease_semantic_similarity = numpy.zeros((60, 60))
 adjacency_matrix = numpy.zeros((571, 60))
 snoRNA_functional_similarity = numpy.zeros((571, 571))
 
-#csv to array disease_semantic_similarity
+# csv to array disease_semantic_similarity
 for i in range(len(disease_name)):
     for j in range(len(disease_name)):
         disease_semantic_similarity[i, j] = disease_similarity.iloc[i, j]
 
-#csv to array adjacency_matrix
+# csv to array adjacency_matrix
 for i in range(len(snoRNA_name)):
     for j in range(len(disease_name)):
         adjacency_matrix[i, j] = known_association.iloc[i, j]
 
-
-
-#csv to array snoRNA_functional_similarity
+# csv to array snoRNA_functional_similarity
 for i in range(len(snoRNA_name)):
     for j in range(len(snoRNA_name)):
         snoRNA_functional_similarity[i, j] = SnoRNA_similarity.iloc[i, j]
-
 
 # K_mean clustering
 unknown = []
@@ -59,14 +54,12 @@ for x in range(571):
 major = []
 for z in range(len(unknown)):
     q = (disease_semantic_similarity[unknown[z][1], :].tolist()
-         + snoRNA_functional_similarity[unknown[z][0],:].tolist())
+         + snoRNA_functional_similarity[unknown[z][0], :].tolist())
     major.append(q)
-
-
 
 print(len(major))
 
-kmeans = KMeans(n_clusters=10, random_state=0).fit( major)
+kmeans = KMeans(n_clusters=6, random_state=0).fit(major)
 center = kmeans.cluster_centers_
 center_x = []
 center_y = []
@@ -74,8 +67,6 @@ for j in range(len(center)):
     center_x.append(center[j][0])
     center_y.append(center[j][1])
 labels = kmeans.labels_
-
-
 
 type1_x = []
 type1_y = []
@@ -89,14 +80,14 @@ type5_x = []
 type5_y = []
 type6_x = []
 type6_y = []
-type7_x = []
-type7_y = []
-type8_x = []
-type8_y = []
-type9_x = []
-type9_y = []
-type10_x = []
-type10_y = []
+# type7_x = []
+# type7_y = []
+# type8_x = []
+# type8_y = []
+# type9_x = []
+# type9_y = []
+# type10_x = []
+# type10_y = []
 
 for i in range(len(labels)):  # 将所有未知关联（疾病，miRNA序列号）进行分类，分成23类并记录
     if labels[i] == 0:
@@ -117,24 +108,23 @@ for i in range(len(labels)):  # 将所有未知关联（疾病，miRNA序列号�
     if labels[i] == 5:
         type6_x.append(unknown[i][0])
         type6_y.append(unknown[i][1])
-    if labels[i] == 6:
-        type7_x.append(unknown[i][0])
-        type7_y.append(unknown[i][1])
-    if labels[i] == 7:
-        type8_x.append(unknown[i][0])
-        type8_y.append(unknown[i][1])
-    if labels[i] == 8:
-        type9_x.append(unknown[i][0])
-        type9_y.append(unknown[i][1])
-    if labels[i] == 9:
-        type10_x.append(unknown[i][0])
-        type10_y.append(unknown[i][1])
+    # if labels[i] == 6:
+    #     type7_x.append(unknown[i][0])
+    #     type7_y.append(unknown[i][1])
+    # if labels[i] == 7:
+    #     type8_x.append(unknown[i][0])
+    #     type8_y.append(unknown[i][1])
+    # if labels[i] == 8:
+    #     type9_x.append(unknown[i][0])
+    #     type9_y.append(unknown[i][1])
+    # if labels[i] == 9:
+    #     type10_x.append(unknown[i][0])
+    #     type10_y.append(unknown[i][1])
 
-
-type = [[], [], [], [], [], [], [], [], [], []]  # 23簇
-mtype = [[], [], [], [], [], [], [], [], [], []]
+type = [[], [], [], [], [], []]  # 23簇
+mtype = [[], [], [], [], [], []]
 dataSet = []
-mtype1 = [[], [], [], [], [], [], [], [], [], []]
+mtype1 = [[], [], [], [], [], []]
 
 for k1 in range(len(type1_x)):
     type[0].append((type1_x[k1], type1_y[k1]))
@@ -148,29 +138,30 @@ for k5 in range(len(type5_x)):
     type[4].append((type5_x[k5], type5_y[k5]))
 for k6 in range(len(type6_x)):
     type[5].append((type6_x[k6], type6_y[k6]))
-for k7 in range(len(type7_x)):
-    type[6].append((type7_x[k7], type7_y[k7]))
-for k8 in range(len(type8_x)):
-    type[7].append((type8_x[k8], type8_y[k8]))
-for k9 in range(len(type9_x)):
-    type[8].append((type9_x[k9], type9_y[k9]))
-for k10 in range(len(type10_x)):
-    type[9].append((type10_x[k10], type10_y[k10]))
+# for k7 in range(len(type7_x)):
+#     type[6].append((type7_x[k7], type7_y[k7]))
+# for k8 in range(len(type8_x)):
+#     type[7].append((type8_x[k8], type8_y[k8]))
+# for k9 in range(len(type9_x)):
+#     type[8].append((type9_x[k9], type9_y[k9]))
+# for k10 in range(len(type10_x)):
+#     type[9].append((type10_x[k10], type10_y[k10]))
 
-for t in range(10):
+for t in range(6):
     mtype1[t] = random.sample(type[t], int((len(type[t]) / len(labels)) * len(known)))
 
 for m2 in range(60):
     for n2 in range(571):
-        for z2 in range(10):
+        for z2 in range(6):
             if (m2, n2) in mtype1[z2]:
-                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataSet
+                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataset
 for m3 in range(571):
     for n3 in range(60):
         if adjacency_matrix[m3, n3] == 1:  # dataset存的是（疾病号，mirna号）
             dataSet.append((m3, n3))  # Combine Major and Minor into training samples containing 10,950 samples
 
 length = len(dataSet)
+print('length:::::::', length)
 # Decision tree
 sumy1 = numpy.zeros(length)
 sumy2 = numpy.zeros(length)
@@ -196,9 +187,10 @@ x = []
 x1 = []
 x2 = []
 y = []
-D = numpy.ones(length) * 1.0 / length # Initialize the weight of the training sample
+D = numpy.ones(length) * 1.0 / length  # Initialize the weight of the training sample
 for xx in dataSet:  # for example in dataset:for循环，在数据dataset（可以是列表、元组、集合、字典等）中 逐个取值存入 变量 example中，然后运行循环体
-    q = disease_semantic_similarity[xx[1], :].tolist() + snoRNA_functional_similarity[xx[0], :].tolist()  # dataset存的是（疾病号，mirna号）  SD疾病综合相似性矩阵   X[1,:] 取第一行的所有列数据
+    q = disease_semantic_similarity[xx[1], :].tolist() + snoRNA_functional_similarity[xx[0],
+                                                         :].tolist()  # dataset存的是（疾病号，mirna号）  SD疾病综合相似性矩阵   X[1,:] 取第一行的所有列数据
     x.append(q)
     if (xx[0], xx[1]) in known:
         y.append(1)  # 标签  正样本为1
@@ -207,16 +199,15 @@ for xx in dataSet:  # for example in dataset:for循环，在数据dataset（可�
 ys = numpy.array(y)
 xs = numpy.array(x)
 
-
-GBDT=GradientBoostingClassifier(n_estimators = 12,max_depth=5,min_samples_leaf=13)
-GBDT.fit(xs,ys)
+# --------------------------------------------
+GBDT = GradientBoostingClassifier(n_estimators=12, max_depth=5, min_samples_leaf=13)
+GBDT.fit(xs, ys)
 OHE = OneHotEncoder()
-OHE.fit(GBDT.apply(xs)[:, :, 0])#model.apply(X_train)返回训练数据X_train在训练好的模型里每棵树中所处的叶子节点的位置（索引）
+OHE.fit(GBDT.apply(xs)[:, :, 0])  # model.apply(X_train)返回训练数据X_train在训练好的模型里每棵树中所处的叶子节点的位置（索引）
 LR = LogisticRegression()
 tprs = []
 aucs = []
-mean_fpr = np.linspace(0,1,100)
-
+mean_fpr = np.linspace(0, 1, 100)
 
 # Assuming xs is your input data and ys is your target variable
 X_train, X_test, y_train, y_test = train_test_split(xs, ys, test_size=0.2, random_state=42)
@@ -226,10 +217,22 @@ X_train, X_test, y_train, y_test = train_test_split(xs, ys, test_size=0.2, rando
 LR.fit(OHE.transform(GBDT.apply(X_train)[:, :, 0]), y_train)
 probas_ = LR.predict_proba(OHE.transform(GBDT.apply(X_test)[:, :, 0]))
 fpr, tpr, thresholds = roc_curve(y_test, probas_[:, 1])
-tprs.append(interp(mean_fpr,fpr,tpr))
+tprs.append(interp(mean_fpr, fpr, tpr))
 tprs[-1][0] = 0.0
 roc_auc = auc(fpr, tpr)
 aucs.append(roc_auc)
+
+# --------------------------------------------
+
+# GBDT = GradientBoostingClassifier(n_estimators=12, max_depth=5, min_samples_leaf=13)
+# # 训练模型
+# GBDT.fit(xs, ys)
+# OHE = OneHotEncoder()
+# OHE.fit(GBDT.apply(xs)[:, :, 0])  # model.apply(X_train)返回训练数据X_train在训练好的模型里每棵树中所处的叶子节点的位置（索引）
+# LR = LogisticRegression()
+# LR.fit(OHE.transform(GBDT.apply(xs)[:, :, 0]), ys)
+
+# --------------------------------------------
 
 # import matplotlib.pyplot as plt
 # from sklearn.metrics import roc_curve, auc
@@ -287,19 +290,45 @@ plt.ylabel('True labels')
 plt.title('Confusion Matrix')
 plt.show()
 
-
-gbm0 = GradientBoostingClassifier(n_estimators = 12,max_depth=5,min_samples_leaf=13)    #range(0, 30, 5)  # 从 0 开始到 30步长为 5
-gbm0.fit(x,y)
-y_pred = gbm0.predict(x)# 返回预测标签
-y_predprob = gbm0.predict_proba(x)[:,1] #predict_proba# 返回预测属于某标签的概率并且每一行的概率和为1。
-print("Accuracy : %.4g" ,metrics.accuracy_score(y.values, y_pred))
-print ("AUC Score (Train): %f" ,metrics.roc_auc_score(y, y_predprob))
+gbm0 = GradientBoostingClassifier(n_estimators=12, max_depth=5,
+                                  min_samples_leaf=13)  # range(0, 30, 5)  # 从 0 开始到 30步长为 5
+gbm0.fit(x, y)
+y_pred = gbm0.predict(x)  # 返回预测标签
+y_predprob = gbm0.predict_proba(x)[:, 1]  # predict_proba# 返回预测属于某标签的概率并且每一行的概率和为1。
+print("Accuracy : %.4g", metrics.accuracy_score(y, y_pred))
+print("AUC Score (Train): %f", metrics.roc_auc_score(y, y_predprob))
 print('Completed.Took %f s.' % (time.time() - startTime))
-print ("Accuracy :" ,metrics.accuracy_score(ys, y_pred))
-print ("AUC Score (Train):", metrics.roc_auc_score(ys, y_predprob))
-# cv =LeaveOneOut(len(ys))
+print("Accuracy :", metrics.accuracy_score(ys, y_pred))
+print("AUC Score (Train):", metrics.roc_auc_score(ys, y_predprob))
 
+for yy in unknown:
+    q1 = known_association[yy[0], :].tolist() + SnoRNA_similarity[yy[1], :].tolist()
+    x1.append(q1)
 
+# fs=gbm0.predict_proba(x1)
+fs = LR.predict_proba(OHE.transform(GBDT.apply(x1)[:, :, 0]))
+px1 = fs[:, 1].tolist()
 
+with open('.\Existing\data2\disease_name.csv', 'r') as file1, open('.\Existing\data2\snoRNA_name.csv', 'r') as file2:
+    csv_reader1 = csv.reader(file1)
+    csv_reader2 = csv.reader(file2)
 
+    # Convert CSV data to lists
+    sheet7 = list(csv_reader1)
+    sheet8 = list(csv_reader2)
+
+px1 = numpy.matrix(px1)
+Sampleindex = numpy.argsort(-px1).tolist()  # .argsort(-px1)返回将对数组排序的索引   从大到小
+Sampleindex = Sampleindex[0]
+file_mfsw = open(r'Prediction results final.txt', 'a+')
+file_mfsw.writelines(['disease', '\t', 'SnoRNA', '\t', 'Score', '\n'])
+file_mfsw.close()
+for i in range(len(unknown)):
+    file_known_dma = fs[:, 1][Sampleindex[i]]
+    s7 = sheet7[unknown[Sampleindex[i]][0]]
+    s8 = sheet8[unknown[Sampleindex[i]][1]]
+    file_mfsw = open(r'Prediction results final.txt', 'a+')
+    file_mfsw.writelines([s7[1], '\t', s8[1], '\t', str(file_known_dma), '\n'])
+    file_mfsw.close()  # Obtain the prediction results for all unknown samples
+# print('Completed.Took %f s.' % (time.time() - startTime))
 

@@ -1,11 +1,9 @@
-class PerformClustering:
-    def __init__(self, max_number_of_clusters=50):
-        self.max_number_of_clusters = max_number_of_clusters
-        pass
+from sklearn.cluster import KMeans
 
-    def plot_elbow_curve(self, dataset):
-        print(self.max_number_of_clusters)
-        return dataset
+
+class PerformClustering:
+    def __init__(self):
+        self.number_of_clusters = 20
 
     def prepare_data_for_clustering(
             self,
@@ -32,3 +30,26 @@ class PerformClustering:
             major.append(q)
 
         return unknown, known, major
+
+    def perform_clustering(self, dataset):
+
+        # Initialize K-Means Clustering with the given number of clusters
+        # also fit the dataset to the K-Means Clustering
+        kmeans = (KMeans(
+            n_clusters=self.number_of_clusters,
+            random_state=0,
+            n_init=10).fit(dataset))
+
+        # Get the cluster centers
+        center = kmeans.cluster_centers_
+
+        center_x = []
+        center_y = []
+        for j in range(len(center)):
+            center_x.append(center[j][0])
+            center_y.append(center[j][1])
+
+        # Get the labels for each data point
+        labels = kmeans.labels_
+
+        return labels

@@ -100,7 +100,7 @@ KD = np.asarray(kd)  # Obtain Gaussian interaction profile kernel similarity for
 kd = []
 SD = np.multiply(SS, DWM) + np.multiply(KD, (1 - DWM))  # np.multiply(A,B)矩阵对应元素位置相乘   疾病综合相似性
 SD = np.asarray(SD)  # DWM  is disease semantic weighting matrix
-gamam = 495 / (LA.norm(C, 'fro') ** 2);
+gamam = 495 / (LA.norm(C, 'fro') ** 2)
 E = C.T * C;
 for i in range(495):
     for j in range(i, 495):
@@ -252,7 +252,9 @@ type = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], 
 mtype = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
 dataSet = []
 mtype1 = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-# print('Completed.Took %f s.' % (time.time() - startTime))
+
+
+
 for k1 in range(len(type1_x)):
     type[0].append((type1_x[k1], type1_y[k1]))
 for k2 in range(len(type2_x)):
@@ -306,11 +308,12 @@ for m2 in range(383):
     for n2 in range(495):
         for z2 in range(23):
             if (m2, n2) in mtype1[z2]:
-                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataSet
+                dataSet.append((m2, n2))  # Store the randomly extracted 23X240 samples in the dataset
 for m3 in range(383):
     for n3 in range(495):
         if A[m3, n3] == 1:  # dataset存的是（疾病号，mirna号）
             dataSet.append((m3, n3))  # Combine Major and Minor into training samples containing 10,950 samples
+
 # Decision tree
 sumy1 = numpy.zeros(10950)
 sumy2 = numpy.zeros(10950)
@@ -369,7 +372,6 @@ for train,test in cv.split(xs):
     tprs[-1][0] = 0.0
     roc_auc = auc(fpr, tpr)#auc(fpr,tpr)，其返回值即为AUC的值。
     aucs.append(roc_auc)
-
 """
 
 GBDT = GradientBoostingClassifier(n_estimators=12, max_depth=5, min_samples_leaf=13)
@@ -392,6 +394,7 @@ y_predprob = gbm0.predict_proba(x)[:,1] #predict_proba# 返回预测属于某标
 #print ("AUC Score (Train):", metrics.roc_auc_score(ys, y_predprob))
 #cv =LeaveOneOut(len(ys))
 """
+
 for yy in unknown:
     q1 = SD[yy[0], :].tolist() + SM[yy[1], :].tolist()
     x1.append(q1)

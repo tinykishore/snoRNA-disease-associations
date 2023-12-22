@@ -4,15 +4,15 @@ import numpy
 
 class DataSet:
     def __init__(self):
-        self.disease_name = pd.read_csv('datasets/disease_name.csv')
-        self.disease_size = len(self.disease_name)  # It should be 60 but results in 59
+        self.disease_name = pd.read_csv('datasets/disease_name.csv', header=None)
+        self.disease_size = len(self.disease_name)
 
-        self.snoRNA_name = pd.read_csv('datasets/snoRNA_name.csv')
-        self.snoRNA_size = len(self.snoRNA_name)  # It should be 571 but results in 570
+        self.snoRNA_name = pd.read_csv('datasets/snoRNA_name.csv', header=None)
+        self.snoRNA_size = len(self.snoRNA_name)
 
-        self.known_association = pd.read_csv('datasets/known_association.csv')
-        self.SnoRNA_similarity = pd.read_csv('datasets/snoRNA_similarity.csv')
-        self.disease_similarity = pd.read_csv('datasets/disease_similarity.csv')
+        self.known_association = pd.read_csv('datasets/known_association.csv', header=None)
+        self.SnoRNA_similarity = pd.read_csv('datasets/snoRNA_similarity.csv', header=None)
+        self.disease_similarity = pd.read_csv('datasets/disease_similarity.csv', header=None)
 
         self.disease_semantic_similarity = self.__prepare_disease_semantic_similarity()
         self.adjacency_matrix = self.__prepare_adjacency_matrix()
